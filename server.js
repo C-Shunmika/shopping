@@ -195,15 +195,16 @@ app.use(function(req, res, next) {
     });
     const insertDocuments = (db, callback) => {
       const collection = db.collection('cart');
-    
+      console.log('check 1');
       collection.insert(
-    
         req.body,
         (error, result) => {
           if (error) return process.exit(1);
           callback(result);
-        }
+          console.log('check 2');
+        }   
       )
+      console.log('check 3');
   }})
     app.route('/getcart').get(function(req, res){
       var str = "";
