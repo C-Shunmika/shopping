@@ -208,15 +208,17 @@ app.use(function(req, res, next) {
   }})
     app.route('/getcart').get(function(req, res){
       var str = "";
+      var item = req.params.item;
+      console.log("im here");
       MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
   
-       console.log("Connected successfully to server");
+       console.log("Connected successfully to cart server");
        //const db = client.db(dbName);
        var db = client.db('shopping');
        var products = [];
        var data = [];
   
-       var cursor = db.collection('cart').find().toArray(
+       var cursor = db.collection('cart').find({name:item,username:"shunmika"}).toArray(
         function(err, doc)
        {
           var product= {}
@@ -233,11 +235,12 @@ app.use(function(req, res, next) {
         })
       })
     })
-    app.route('/removecart').get(function(req, res){
+    app.route('/removecart/:item').get(function(req, res){
       var str = "";
-      
+      console.log("Remove cart "+req.params.item);
+      var item = req.params.item;
       MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
-  
+       console.log("--------------------------------");
        console.log("Connected successfully to server");
        //const db = client.db(dbName);
        var db = client.db('shopping');
@@ -246,9 +249,17 @@ app.use(function(req, res, next) {
        let remove;
   
        const col  = db.collection('cart');
-       remove = col.findOneAndDelete({name:"jeans"});
-       client.close();
-
-      })
+       col.deleteOne({name:item,username:"shunmika"}, function(err, obj) {
+        if (err) 
+        {
+          console.log("--------------------------------");
+          console.log(err);
+          throw err;
+        }
+        console.log(obj);
+        console.log("1 document deleted");
+        client.close();
+       })
     })
+  })
     
