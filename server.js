@@ -206,10 +206,13 @@ app.use(function(req, res, next) {
       )
       console.log('check 3');
   }})
-    app.route('/getcart').get(function(req, res){
+    app.route('/getcart/:username').get(function(req, res){
       var str = "";
-      var item = req.params.item;
+      var name = req.params.name;
+      var username = req.params.username;
+
       console.log("im here");
+      console.log("User --> "+username+", Item --->"+name);
       MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
   
        console.log("Connected successfully to cart server");
@@ -217,8 +220,9 @@ app.use(function(req, res, next) {
        var db = client.db('shopping');
        var products = [];
        var data = [];
+       var filter ={"item":name,"user":username}
   
-       var cursor = db.collection('cart').find({name:item,username:"shunmika"}).toArray(
+       var cursor = db.collection('cart').find({user:username}).toArray(
         function(err, doc)
        {
           var product= {}
