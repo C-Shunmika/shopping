@@ -233,3 +233,22 @@ app.use(function(req, res, next) {
         })
       })
     })
+    app.route('/removecart').get(function(req, res){
+      var str = "";
+      
+      MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+  
+       console.log("Connected successfully to server");
+       //const db = client.db(dbName);
+       var db = client.db('shopping');
+       var products = [];
+       var data = [];
+       let remove;
+  
+       const col  = db.collection('cart');
+       remove = col.findOneAndDelete({name:"jeans"});
+       client.close();
+
+      })
+    })
+    
