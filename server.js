@@ -209,10 +209,10 @@ app.use(function(req, res, next) {
     app.route('/getcart/:username').get(function(req, res){
       var str = "";
       var name = req.params.name;
-      var username = req.params.username;
+      var user = req.params.username;
 
       console.log("im here");
-      console.log("User --> "+username+", Item --->"+name);
+      console.log("User --> "+user+", Item --->"+name);
       MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
   
        console.log("Connected successfully to cart server");
@@ -220,9 +220,8 @@ app.use(function(req, res, next) {
        var db = client.db('shopping');
        var products = [];
        var data = [];
-       var filter ={"item":name,"user":username}
   
-       var cursor = db.collection('cart').find({user:username}).toArray(
+       var cursor = db.collection('cart').find({username:user}).toArray(
         function(err, doc)
        {
           var product= {}
@@ -239,10 +238,12 @@ app.use(function(req, res, next) {
         })
       })
     })
-    app.route('/removecart/:item').get(function(req, res){
+    app.route('/removecart/:item/:username').get(function(req, res){
       var str = "";
-      console.log("Remove cart "+req.params.item);
       var item = req.params.item;
+      var user = req.params.username;
+      console.log("Remove cart "+item+", user name "+user);
+      
       MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
        console.log("--------------------------------");
        console.log("Connected successfully to server");
@@ -253,16 +254,17 @@ app.use(function(req, res, next) {
        let remove;
   
        const col  = db.collection('cart');
-       col.deleteOne({name:item,username:"shunmika"}, function(err, obj) {
+       col.deleteOne({name:item},{username:user}, function(err, obj) {
         if (err) 
         {
           console.log("--------------------------------");
           console.log(err);
           throw err;
         }
-        console.log(obj);
+        //console.log(obj);
         console.log("1 document deleted");
         client.close();
+        res.end(JSON.stringify({"reuslt":"success"}));
        })
     })
   })
