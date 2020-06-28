@@ -264,7 +264,7 @@ app.use(function(req, res, next) {
         //console.log(obj);
         console.log("1 document deleted");
         client.close();
-        res.end(JSON.stringify({"reuslt":"success"}));
+        res.end(JSON.stringify({"result":"success"}));
        })
     })
   })
